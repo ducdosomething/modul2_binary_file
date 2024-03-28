@@ -15,7 +15,7 @@ public class WriteFile {
     public void writeFile(User user) {
         File file = new File("Demo/example.dat");
         try {
-            OutputStream outputStream = new FileOutputStream(file);
+            OutputStream outputStream = new FileOutputStream(file, true);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(user);
             objectOutputStream.close();

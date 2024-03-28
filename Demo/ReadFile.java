@@ -2,30 +2,41 @@ package Demo;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReadFile {
-    public static User readFile() {
+    public static List<User> readUsers() {
+        List<User> users = new ArrayList<>();
         File file = new File("Demo/example.dat");
         try {
             InputStream inputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-            Object object = objectInputStream.readObject();
-            return (User) object;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            while (true) {
+                try {
+                    Object object = objectInputStream.readObject();
+                    if (object instanceof User) {
+                        users.add((User) object);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    // Đã đọc hết dữ liệu từ tệp tin
+                    break;
+                }
+            }
+            objectInputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
+        return users;
     }
 
     public static void main(String[] args) {
-        User user = readFile();
-        System.out.println(user);
+        List<User> users = readUsers();
+        for (User user : users) {
+            System.out.println(user);
+        }
     }
 }
